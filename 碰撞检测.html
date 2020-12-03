@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>边缘碰撞检测</title>
+    <style>
+        * {
+            margin: 0;
+        }
+        
+        .box {
+            width: 500px;
+            height: 500px;
+            border: 1px solid red;
+            margin: 0 auto;
+            position: relative;
+            box-sizing: border-box;
+        }
+        
+        span {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            /* border-radius: 50%; */
+            background-color: rgb(0, 81, 255);
+        }
+        
+        .zhuan {
+            width: 50px;
+            height: 90px;
+            background-color: pink;
+            position: absolute;
+            top: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box">
+        <div class="zhuan"></div>
+        <span></span>
+    </div>
+
+</body>
+
+</html>
+
+
+<script>
+    var box = document.querySelector('.box');
+    var span = document.querySelector('span');
+    var zhuan = document.querySelector('.zhuan');
+
+
+    // 设置一个随机数  用来做随机速度  这个随机数必须写在定时器外面 
+    var speedX = Math.floor(Math.random() * 8);
+    var speedY = Math.floor(Math.random() * 8);
+
+
+
+
+    // 每20ms更新球的left  和  top值  实现球的运动
+    setInterval(function() {
+
+        // span的偏移量必须写在 定时器里面  因为要随时获取 更新偏移量
+        var s_left = span.offsetLeft; //span 距离父及的左偏移量 ==> 定位的left值
+        var s_top = span.offsetTop; //span 距离父及的上偏移量 ==> 定位的top值
+
+        // 每20ms更新球的left 和 top值   把球的当前偏移量 + 随机数的速度值 = 球的偏移量
+        span.style.left = s_left + speedX + 'px';
+        span.style.top = s_top + speedY + 'px';
+
+
+        // 这里的偏移量也必须重写  这里也是重新获取的更新后的偏移量
+
+        // 如果球的左偏移大于了父级 - 球自身的宽度 说明球到了最右侧  
+        // 如果球的左偏移小于等于了0  说明球到了最左侧     给速度值 speedX 乘以-1 speedX值就变成了负值  就会反着往回走了
+        if (span.offsetLeft >= 480 || span.offsetLeft < 0) {
+            speedX *= -1; // 乘以-1  改为反方向
+        }
+
+
+        // 上下同理
+		// 如果球的上偏移大于了父级 - 球自身的高度 说明球到了最低侧  
+        // 如果球的上偏移小于等于了0  说明球到了最顶侧     给速度值 speedX 乘以-1 speedX值就变成了负值  就会反着往回走了
+        if (span.offsetTop >= 480 || span.offsetTop < 0) {
+            speedY *= -1; // 乘以-1  改为反方向
+        }
+
+        if (span.offsetTop >= 90) {
+            zhuan.style.backgroundColor = 'red';
+        }
+    }, 20)
+</script>
